@@ -4,7 +4,7 @@
 
 # terminal emulator
 super + Return
-	kitty
+	alacritty
 
 # program launcher
 super + p
@@ -12,7 +12,7 @@ super + p
 
 # apps
 super + b
-	google-chrome-stable
+	brave
 
 super + e
 	thunar
