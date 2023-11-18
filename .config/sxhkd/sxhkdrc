@@ -15,7 +15,7 @@ super + b
 	brave
 
 super + e
-	thunar
+	pcmanfm
 
 super + {@Print,shift + @Print,shift+ctrl + @Print}
 	flameshot {full -c,gui -c -s,gui -c}
