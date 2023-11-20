@@ -19,5 +19,4 @@ _darcs
 ^/LICENSE.*
 ^/COPYING
 
-\backgrounds
-\setup-scripts
+/setup-scripts
