@@ -47,6 +47,8 @@ PACKAGES=(
 	alsa-plugins
 	gnome-keyring
 	plocate
+  xclip
+  stow
 )
 
 installed=0

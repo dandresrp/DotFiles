@@ -154,7 +154,7 @@ screens = [
                 #widget.TaskList(),
                 widget.Spacer(),
                 # widget.WindowName(),
-                widget.Clock(format="%a %I:%M %p"),
+                widget.Clock(format="%a %d %I:%M %p"),
                 widget.Spacer(),
                 # widget.WidgetBox(close_button_location='right', widgets=[widget.Systray()]),
                 widget.Systray()
