@@ -1,29 +1,3 @@
-# Copyright (c) 2010 Aldo Cortesi
-# Copyright (c) 2010, 2014 dequis
-# Copyright (c) 2012 Randall Ma
-# Copyright (c) 2012-2014 Tycho Andersen
-# Copyright (c) 2012 Craig Barnes
-# Copyright (c) 2013 horsik
-# Copyright (c) 2013 Tao Sauvage
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-# SOFTWARE.
-
 from libqtile import bar, layout, widget, hook
 from libqtile.config import EzClick as Click, EzDrag as Drag, Group, ScratchPad, DropDown, EzKey as Key, Match, Screen
 from libqtile.lazy import lazy
@@ -39,13 +13,11 @@ def start():
 
 mod = "mod4"
 terminal = "alacritty"
-browser = "brave"
+browser = "firefox"
 files = "pcmanfm"
 prompt = "rofi -show run"
 
 keys = [
-    # A list of available commands that can be bound to keys can be found
-    # at https://docs.qtile.org/en/latest/manual/config/lazy.html
     # Switch between windows
     Key("M-h", lazy.layout.left(), desc="Move focus to left"),
     Key("M-l", lazy.layout.right(), desc="Move focus to right"),
@@ -77,6 +49,7 @@ keys = [
     Key("M-s", lazy.spawn("flameshot full -c"), desc="Take screenshot of fullscreen"),
     Key("M-S-s", lazy.spawn("flameshot gui -c -s"), desc="Take screenshot of selected region"),
     Key("M-S-C-s", lazy.spawn("flameshot gui -c"), desc="Take screenshot of selected region and open editor"),
+    Key("<F10>", lazy.group['scratchpad'].dropdown_toggle('volume')),
     Key("<F11>", lazy.group['scratchpad'].dropdown_toggle('term')),
     Key("<F12>", lazy.group['scratchpad'].dropdown_toggle('music')),
 
@@ -92,6 +65,7 @@ keys = [
 
 groups = [
         ScratchPad("scratchpad", [
+            DropDown("volume", "pavucontrol", height=0.3, width=0.3, x=0.35, y=0.30, opacity=1.0),
             DropDown("term", "alacritty", height=0.7, width=0.5, x=0.25, y=0.15, opacity=1.0),
             DropDown("music", "spotify", height=0.7, width=0.5, x=0.25, y=0.15, opacity=1.0),
             ]),
@@ -119,8 +93,8 @@ for j in range(9):
 layouts = [
     layout.Columns(
         insert_position=1,
-        # margin=4,
-        # margin_on_single=0,
+        margin=4,
+        margin_on_single=0,
         border_focus="#88898a",
         border_width=2,
         ),
@@ -154,7 +128,7 @@ screens = [
                 #widget.TaskList(),
                 widget.Spacer(),
                 # widget.WindowName(),
-                widget.Clock(format="%a %d %I:%M %p"),
+                widget.Clock(format="%a %d %H:%M %p"),
                 widget.Spacer(),
                 # widget.WidgetBox(close_button_location='right', widgets=[widget.Systray()]),
                 widget.Systray()
@@ -193,6 +167,7 @@ floating_layout = layout.Floating(
         Match(wm_class="makebranch"),  # gitk
         Match(wm_class="maketag"),  # gitk
         Match(wm_class="ssh-askpass"),  # ssh-askpass
+        Match(wm_class="Ristretto"),
         Match(title="branchdialog"),  # gitk
         Match(title="pinentry"),  # GPG key password entry
         Match(title="Variety Images"),
