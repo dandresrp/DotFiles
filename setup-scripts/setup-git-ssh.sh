@@ -2,8 +2,8 @@
 
 mkdir $HOME/.ssh
 echo "Host github.com
- Hostname ssh.github.com
- Port 443" > $HOME/.ssh/config
+Hostname ssh.github.com
+Port 443" > $HOME/.ssh/config
 
 rm $HOME/.gitconfig
 echo "Setting up Git for you..."
@@ -28,7 +28,7 @@ echo "Done? (Y,N)"
 read opt
 
 if [ $opt = 'Y' ]; then
-	ssh -T git@github.com
+    ssh -T git@github.com
 else
-	echo "Remember to run ssh -T git@github.com later."
+    echo "Remember to run ssh -T git@github.com later."
 fi
