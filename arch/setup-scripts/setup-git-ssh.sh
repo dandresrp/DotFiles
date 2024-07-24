@@ -18,10 +18,10 @@ git config --global user.name "$name"
 git config --global user.email "$email"
 git config --global core.editor "$editor"
 git config --global init.defaultBranch main
+git config --global color.ui auto
+git config --global pull.rebase false
 
-ssh-keygen -t ed25519 -C "$email"
-eval "$(ssh-agent -s)"
-ssh-add $HOME/.ssh/id_ed25519
+ssh-keygen -t ed25519
 cat $HOME/.ssh/id_ed25519.pub
 echo "Add this SSH key to your GitHub Account"
 echo "Done? (Y,N)"
