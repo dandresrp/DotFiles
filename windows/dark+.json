@@ -1,0 +1,21 @@
+{
+    "name": "Dark+",
+    "background": "#1F1F1F",
+    "foreground": "#CCCCCC",
+    "black": "#000000",
+    "red": "#d6181b",
+    "green": "#6A9955",
+    "yellow": "#e4d201",
+    "blue": "#569cd6",
+    "purple": "#bc3fbc",
+    "cyan": "#4EC9B0",
+    "white": "#e5e5e5",
+    "brightBlack": "#666666",
+    "brightRed": "#ce9178",
+    "brightGreen": "#b5cea8",
+    "brightYellow": "#DCDCAA",
+    "brightBlue": "#9cdcfe",
+    "brightPurple": "#d670d6",
+    "brightCyan": "#9cdcfe",
+    "brightWhite": "#e5e5e5"
+}
