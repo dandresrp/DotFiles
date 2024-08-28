@@ -8,8 +8,6 @@ from libqtile.config import (
     EzKey as Key,
     Match,
     Screen,
-    ScratchPad,
-    DropDown,
 )
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
@@ -18,7 +16,7 @@ mod = "mod4"
 terminal = "alacritty"
 browser = "google-chrome-stable"
 files = "pcmanfm"
-run = "rofi -show run"
+run = "rofi -show drun"
 
 
 @hook.subscribe.startup_once
@@ -60,44 +58,6 @@ keys = [
     Key("M-b", lazy.spawn(browser), desc="Launch browser"),
     Key("M-e", lazy.spawn(files), desc="Launch file manager"),
     Key("M-p", lazy.spawn(run), desc="Launch run prompt"),
-    Key("M-s", lazy.spawn("flameshot full -c"), desc="Take screenshot of fullscreen"),
-    Key(
-        "M-S-s",
-        lazy.spawn("flameshot gui -c -s"),
-        desc="Take screenshot of selected region",
-    ),
-    Key(
-        "M-S-C-s",
-        lazy.spawn("flameshot gui -c"),
-        desc="Take screenshot of selected region and open editor",
-    ),
-    Key("<F10>", lazy.group["scratchpad"].dropdown_toggle("volume")),
-    Key("<F11>", lazy.group["scratchpad"].dropdown_toggle("term")),
-    Key("<F12>", lazy.group["scratchpad"].dropdown_toggle("music")),
-    Key(
-        "<XF86AudioRaiseVolume>",
-        lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ +5%"),
-    ),
-    Key(
-        "<XF86AudioLowerVolume>",
-        lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ -5%"),
-    ),
-    Key(
-        "<XF86AudioMute>",
-        lazy.spawn("pactl set-sink-mute @DEFAULT_SINK@ toggle"),
-    ),
-    Key(
-        "<XF86AudioMicMute>",
-        lazy.spawn("pactl set-source-mute @DEFAULT_SOURCE@ toggle"),
-    ),
-    Key(
-        "<XF86MonBrightnessUp>",
-        lazy.spawn("brightnessctl set +10%"),
-    ),
-    Key(
-        "<XF86MonBrightnessDown>",
-        lazy.spawn("brightnessctl set 10%-"),
-    ),
     # Toggle between different layouts as defined below
     Key("M-<Tab>", lazy.next_layout(), desc="Toggle between layouts"),
     Key("M-w", lazy.window.kill(), desc="Kill focused window"),
@@ -117,6 +77,8 @@ keys = [
 ]
 
 # Add key bindings to switch VTs in Wayland.
+# We can't check qtile.core.name in default config as it is loaded before qtile is started
+# We therefore defer the check until the key binding is run by using .when(func=...)
 for vt in range(1, 8):
     keys.append(
         Key(
@@ -126,111 +88,49 @@ for vt in range(1, 8):
         )
     )
 
-groups = [
-    ScratchPad(
-        "scratchpad",
-        [
-            DropDown(
-                "volume",
-                "pavucontrol",
-                height=0.3,
-                width=0.3,
-                x=0.35,
-                y=0.30,
-                opacity=1.0,
-            ),
-            DropDown(
-                "term", "alacritty", height=0.7, width=0.5, x=0.25, y=0.15, opacity=1.0
-            ),
-            DropDown(
-                "music", "spotify", height=0.7, width=0.5, x=0.25, y=0.15, opacity=1.0
-            ),
-        ],
-    ),
-]
-group_names = [
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-]
-group_layouts = [
-    "columns",
-    "columns",
-    "columns",
-    "columns",
-    "columns",
-    "columns",
-    "columns",
-    "columns",
-    "columns",
-]
-group_labels = [
-    "1",
-    "2",
-    "3",
-    "4",
-    "5",
-    "6",
-    "7",
-    "8",
-    "9",
-]
 
-for i in range(9):
-    groups.append(
-        Group(
-            name=group_names[i], layout=group_layouts[i].lower(), label=group_labels[i]
-        )
-    )
+groups = [Group(i) for i in "123456789"]
 
-for j in range(9):
+for i in groups:
     keys.extend(
         [
+            # mod + group number = switch to group
             Key(
-                "M-" + str(j + 1),
-                lazy.group[group_names[j]].toscreen(),
-                desc="Switch to group {}".format(group_names[j]),
+                f"M-{i.name}",
+                lazy.group[i.name].toscreen(),
+                desc="Switch to group {}".format(i.name),
             ),
+            # mod + shift + group number = switch to & move focused window to group
             Key(
-                "M-S-" + str(j + 1),
-                lazy.window.togroup(group_names[j], switch_group=False),
-                desc="Switch to & move focused window to group {}".format(
-                    group_names[j]
-                ),
+                f"M-S-{i.name}",
+                lazy.window.togroup(i.name, switch_group=True),
+                desc="Switch to & move focused window to group {}".format(i.name),
             ),
+            # Or, use below if you prefer not to switch to that group.
+            # # mod + shift + group number = move focused window to group
+            # Key(iM-S-.name, lazy.window.togroup(i.name),
+            #     desc="move focused window to group {}".format(i.name)),
         ]
     )
 
 layouts = [
-    layout.Columns(
-        insert_position=1,
-        margin=0,
-        margin_on_single=0,
-        border_focus="#88898a",
-        border_width=2,
-    ),
+    layout.Columns(border_focus_stack=["#d75f5f", "#8f3d3d"], border_width=4),
     layout.Max(),
     # Try more layouts by unleashing below layouts.
     # layout.Stack(num_stacks=2),
-    layout.Bsp(),
+    # layout.Bsp(),
     # layout.Matrix(),
-    layout.MonadTall(),
-    layout.MonadWide(),
+    # layout.MonadTall(),
+    # layout.MonadWide(),
     # layout.RatioTile(),
-    layout.Tile(),
+    # layout.Tile(),
     # layout.TreeTab(),
     # layout.VerticalTile(),
     # layout.Zoomy(),
 ]
 
 widget_defaults = dict(
-    font="FiraCode Nerd Font",
+    font="Roboto Regular",
     fontsize=14,
     padding=4,
 )
@@ -240,34 +140,18 @@ screens = [
     Screen(
         bottom=bar.Bar(
             [
-                widget.CurrentLayoutIcon(scale=0.8),
+                widget.CurrentLayout(),
                 widget.GroupBox(disable_drag=True),
                 widget.Prompt(),
-                widget.Spacer(),
+                widget.WindowName(),
+                widget.Battery(),
                 # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
                 # widget.StatusNotifier(),
-                widget.Systray(background="6D597A"),
-                widget.Spacer(length=5),
-                # widget.CheckUpdates(
-                #     background="3C787E",
-                #     distro="Arch_yay",
-                #     no_update_string="No updates",
-                #     initial_text="Checking updates...",
-                # ),
-                # widget.Spacer(length=5),
-                widget.Volume(fmt="VOL {}", background="3C787E"),
-                widget.Spacer(length=5),
-                widget.Battery(
-                    format="BAT {percent:2.0%}",
-                    background="4A6A8A",
-                ),
-                widget.Spacer(length=5),
-                widget.Clock(
-                    format="%d/%m/%y %H:%M",
-                    background="E27D60",
-                ),
+                widget.Systray(),
+                widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
+                widget.QuickExit(),
             ],
-            26,
+            24,
             # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
             # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
         ),
@@ -286,7 +170,7 @@ mouse = [
 ]
 
 dgroups_key_binder = None
-dgroups_app_rules = []
+dgroups_app_rules = []  # type: list
 follow_mouse_focus = True
 bring_front_click = False
 floats_kept_above = True
@@ -301,12 +185,7 @@ floating_layout = layout.Floating(
         Match(wm_class="ssh-askpass"),  # ssh-askpass
         Match(title="branchdialog"),  # gitk
         Match(title="pinentry"),  # GPG key password entry
-        Match(wm_class="Ristretto"),
-        Match(title="Variety Images"),
-        Match(title="Friends List"),
-    ],
-    border_focus="#88898a",
-    border_width=2,
+    ]
 )
 auto_fullscreen = True
 focus_on_window_activation = "smart"

@@ -1,20 +1,10 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
-killall variety
-killall volumeicon
-
-xsetroot -cursor_name left_ptr
-setxkbmap -layout us -variant altgr-intl
-#/usr/bin/lxpolkit &
-/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
-xfce4-notifyd &
-xfce4-power-manager &
-picom &
-# variety &
-volumeicon &
-# parcellite &
 nitrogen --restore &
-flameshot &
-volumeicon &
+picom &
+/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 nm-applet &
-pcmanfm --daemon-mode &
+setxkbmap -layout us -variant altgr-intl &
+xfce4-power-manager &
+flameshot &
+dunst &

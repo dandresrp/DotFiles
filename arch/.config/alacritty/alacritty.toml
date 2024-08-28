@@ -1,14 +1,11 @@
-import = ["~/.config/alacritty/dark-modern.toml"]
-
-[window]
-padding = { x = 8, y = 8}
-dynamic_title = false
-title = "Alacritty"
-startup_mode = "Maximized"
+import = ["~/.config/alacritty/dark_plus.toml"]
 
 [font]
-normal = { family = "FiraCode Nerd Font"}
-italic = { family = "FiraCode Nerd Font"}
-bold_italic = { family = "FiraCode Nerd Font"}
-bold = { family = "FiraCode Nerd Font"}
-size = 14
+normal.family = "FiraCode Nerd Font"
+bold.family = "FiraCode Nerd Font"
+bold_italic.family = "FiraCode Nerd Font"
+italic.family = "FiraCode Nerd Font"
+size = 10
+
+[window]
+padding = { x = 8, y = 8 }
