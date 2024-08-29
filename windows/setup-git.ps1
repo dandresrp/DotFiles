@@ -28,14 +28,31 @@ git config --global init.defaultBranch main
 git config --global color.ui auto
 git config --global pull.rebase false
 
-ssh-keygen -t ed25519
+$sshAgentService = Get-Service ssh-agent -ErrorAction SilentlyContinue
+
+if ($sshAgentService -eq $null -or $sshAgentService.Status -ne 'Running') {
+    Write-Host "ssh-agent is not running. Setting it to start automatically and starting it now..."
+    
+    Set-Service -Name ssh-agent -StartupType Automatic
+    Start-Service ssh-agent
+} else {
+    Write-Host "ssh-agent is already running."
+}
+
+if (-Not (Test-Path -Path "$sshDir\id_ed25519")) {
+    ssh-keygen -t ed25519 -C "$email" -f "$sshDir\id_ed25519" -N ""
+    ssh-add "$sshDir\id_ed25519"
+} else {
+    Write-Host "SSH key already exists, skipping key generation."
+}
 
 Get-Content "$sshDir\id_ed25519.pub"
-Write-Host "Add this SSH key to your GitHub Account"
-$opt = Read-Host "Done? (Y,N)"
+Write-Host "Add this SSH key to your GitHub Account: https://github.com/settings/keys"
+
+$opt = Read-Host "Have you added the SSH key to your GitHub account? (Y/N)"
 
 if ($opt -eq 'Y') {
     ssh -T git@github.com
 } else {
-    Write-Host "Remember to run ssh -T git@github.com later."
+    Write-Host "Remember to run 'ssh -T git@github.com' later once you've added the SSH key."
 }
